@@ -1,7 +1,7 @@
 name: Release on tag creation push
 on:
   push:
-    branch:
+    branches:
       - main
     tags:
       - 'v*'
