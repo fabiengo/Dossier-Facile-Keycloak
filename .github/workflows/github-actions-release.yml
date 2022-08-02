@@ -14,7 +14,7 @@ jobs:
       - run: ls
       - run: export VERSION=$(cat version)
       - run: export VERSIONS=($(grep -Eo '[[:digit:]]+|\.+' <<<"$VERSION") )
-      - run: export FINAL_VERSION=$(( $VERSIONS[1]))'.' $(( $VERSIONS[2]+1))
+      - run: export FINAL_VERSION=$(($VERSIONS[1]))'.'$(( $VERSIONS[2]+1))
       - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
       - run: git tag -a v$FINAL_VERSION -m "Automatic tag $FINAL_VERSION"
       - run: git push origin --tags
