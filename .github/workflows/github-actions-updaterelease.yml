@@ -1,6 +1,8 @@
 name: Release on tag creation push
 on:
   push:
+    branch:
+      - main
     tags:
       - 'v*'
 
@@ -11,7 +13,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: ls
       - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
-      - run: echo '$(${{ github.repository.releases_url }}'
+      - run: ${{ github.repository }}
+      - run: echo '$(${{ github.repository.releases_url }})'
       - run: export release_url_tagged =$(echo ${{ github.repository.releases_url}} | sed -E 's/\{\/id\}/\?tag=${{github.ref_name}}/g )'
       - run: echo $release_url_tagged
       - run: curl $release_url_tagged
