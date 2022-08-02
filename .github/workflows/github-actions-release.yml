@@ -2,7 +2,7 @@ name: Release on tag creation push
 on:
   push:
     branches:
-      - main
+      - test
     tags-ignore:
       - '*'
 
@@ -20,7 +20,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-      - run: git tag -a v${FINAL_VERSION} -m "Automatic tag ${FINAL_VERSION}"
+      - run: git tag -a v${FINAL_VERSION} -m "Automatic tag ${$FINAL_VERSION}"
       - run: git push origin --tags
       - run: git push origin --follow-tags
       - run: jar cf Dossier-Facile-Keycloak-v${FINAL_VERSION}.jar LICENSE META-INF theme
@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$FINAL_VERSION
+          tag_name: v${FINAL_VERSION}
           release_name: Release ${{ github.ref }} $FINAL_VERSION
           draft: false
           prerelease: false
