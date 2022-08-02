@@ -1,4 +1,4 @@
-name: Release on tag creation push
+name: Add Keycloak JAR Asset
 on:
   release:
     types: [published]
@@ -8,16 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: ls
-      - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
-#      - run: ${{ github.repository }}
-#      - run: echo '${{ github.repository.releases_url }}'
-#      - run: export release_url_tagged =$(echo ${{ github.repository.releases_url}} | sed -E 's/\{\/id\}/\?tag=${{github.ref_name}}/g )'
-#      - run: echo $release_url_tagged
-#      - run: echo '${{ github.repository.releases_url }}'
-#      - run: echo https://api.github.com/repos/fabiengo/Dossier-Facile-Keycloak/releases?tag=4.88
-      - run: echo ${{ github.event.release.upload_url }}
-      - name: Upload Release Asset
+      - name: Build jar
+        run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
+      - name: Upload Release Asset with jar
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
