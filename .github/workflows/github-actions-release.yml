@@ -1,22 +1,31 @@
 name: Release on tag creation push
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+    tags-ignore:
+      - '*'
+
 jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: ls
+      - run: export VERSION=$(cat version)
+      - run: export VERSIONS=($(grep -Eo '[[:digit:]]+|\.+' <<<"$VERSION") )
+      - run: export FINAL_VERSION=$(( $VERSIONS[1]))'.' $(( $VERSIONS[2]+1))
       - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
+      - run: git tag -a v$FINAL_VERSION -m "Automatic tag $FINAL_VERSION"
+      - run: git push origin --tags
+      - run: git push origin --follow-tags
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: v$FINAL_VERSION
+          release_name: Release ${{ github.ref }} $FINAL_VERSION
           draft: false
           prerelease: false
