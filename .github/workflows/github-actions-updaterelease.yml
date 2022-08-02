@@ -1,10 +1,7 @@
 name: Release on tag creation push
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 jobs:
   build-release:
@@ -19,24 +16,14 @@ jobs:
 #      - run: echo $release_url_tagged
 #      - run: echo '${{ github.repository.releases_url }}'
 #      - run: echo https://api.github.com/repos/fabiengo/Dossier-Facile-Keycloak/releases?tag=4.88
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}'1'
-          release_name: Release ${{github.ref_name}} +1
-          draft: false
-          prerelease: false
+      - run: echo ${{ github.event.release.upload_url }}
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./Dossier-Facile-Keycloak-${{github.ref_name}}.jar
           asset_name: Dossier-Facile-Keycloak-${{github.ref_name}}.jar
           asset_content_type: application/zip
-      - run: echo ${{ steps.create_release.outputs.upload_url }}
