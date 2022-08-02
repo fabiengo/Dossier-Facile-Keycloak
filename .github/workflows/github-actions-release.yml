@@ -16,10 +16,14 @@ jobs:
       - run: export MAJOR_VERSION=$(echo $VERSION | sed -E  's/(.*)\.(.*)/\1/')
       - run: export MINOR_VERSION=$(echo $VERSION | sed -E  's/(.*)\.(.*)/\2/')
       - run: export FINAL_VERSION=$((MAJOR_VERSION))'.'$(($MINOR_VERSION+1))
-      - run: jar cf Dossier-Facile-Keycloak-v${FINAL_VERSION}.jar LICENSE META-INF theme
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - run: git tag -a v${FINAL_VERSION} -m "Automatic tag ${FINAL_VERSION}"
       - run: git push origin --tags
       - run: git push origin --follow-tags
+      - run: jar cf Dossier-Facile-Keycloak-v${FINAL_VERSION}.jar LICENSE META-INF theme
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
