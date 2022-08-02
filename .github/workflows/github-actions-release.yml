@@ -7,10 +7,9 @@ jobs:
   build-release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: ls
-      - run: echo ${{ github.ref }}
-      - run: unzip Dossier-Facile-Keycloak-${{github.ref_name}}.zip
-      - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar *
+      - run: jar cf Dossier-Facile-Keycloak-${{github.ref_name}}.jar LICENSE META-INF theme
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
